@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reagent Volume Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 500px;
+        }
+        label, input {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+        }
+        #results {
+            margin-top: 20px;
+        }
+        .result-item {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-left: 5px solid #4CAF50;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Reagent Volume Calculator</h1>
+    <form id="calculator">
+        <label for="numReagents">Number of Reagents:</label>
+        <input type="number" id="numReagents" min="1" value="1" onchange="generateReagentInputs()" required>
+
+        <div id="reagentInputs">
+            <!-- Reagent input fields will be generated here -->
+        </div>
+
+        <label for="finalVolume">Final Volume (V<sub>2</sub>) in mL:</label>
+        <input type="number" id="finalVolume" step="any" required>
+
+        <button type="button" onclick="calculateVolumes()">Calculate Volumes</button>
+    </form>
+
+    <div id="results"></div>
+</div>
+
+<script>
+    function generateReagentInputs() {
+        const numReagents = parseInt(document.getElementById('numReagents').value);
+        const reagentInputsDiv = document.getElementById('reagentInputs');
+        reagentInputsDiv.innerHTML = '';
+
+        for (let i = 1; i <= numReagents; i++) {
+            const reagentDiv = document.createElement('div');
+            reagentDiv.innerHTML = `
+                <h3>Reagent ${i}</h3>
+                <label for="stockConcentration${i}">Stock Concentration (C<sub>1</sub>) in mg/mL:</label>
+                <input type="number" id="stockConcentration${i}" step="any" required>
+
+                <label for="desiredConcentration${i}">Desired Concentration (C<sub>2</sub>) in mg/mL:</label>
+                <input type="number" id="desiredConcentration${i}" step="any" required>
+            `;
+            reagentInputsDiv.appendChild(reagentDiv);
+        }
+    }
+
+    function calculateVolumes() {
+        const numReagents = parseInt(document.getElementById('numReagents').value);
+        const V2 = parseFloat(document.getElementById('finalVolume').value);
+
+        if (isNaN(V2) || V2 <= 0) {
+            alert('Please enter a valid final volume.');
+            return;
+        }
+
+        let totalVolume = 0;
+        let resultsHTML = '<h2>Results:</h2>';
+
+        for (let i = 1; i <= numReagents; i++) {
+            const C1 = parseFloat(document.getElementById(`stockConcentration${i}`).value);
+            const C2 = parseFloat(document.getElementById(`desiredConcentration${i}`).value);
+
+            if (isNaN(C1) || isNaN(C2) || C1 <= 0 || C2 <= 0) {
+                alert(`Please enter valid concentrations for Reagent ${i}.`);
+                return;
+            }
+
+            const V1 = (C2 * V2) / C1;
+            totalVolume += V1;
+
+            resultsHTML += `
+                <div class="result-item">
+                    <p><strong>Reagent ${i} Volume (V<sub>1</sub>):</strong> ${V1.toFixed(2)} mL</p>
+                </div>
+            `;
+        }
+
+        const diluentVolume = V2 - totalVolume;
+
+        if (diluentVolume < 0) {
+            alert('Total reagent volumes exceed the final volume. Please adjust your inputs.');
+            return;
+        }
+
+        resultsHTML += `
+            <div class="result-item">
+                <p><strong>Volume of Diluent Needed:</strong> ${diluentVolume.toFixed(2)} mL</p>
+            </div>
+        `;
+
+        document.getElementById('results').innerHTML = resultsHTML;
+    }
+
+    // Generate initial reagent inputs
+    generateReagentInputs();
+</script>
+
+</body>
+</html>
