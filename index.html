@@ -31,6 +31,37 @@
     <div id="result"></div>
 </div>
 
+<div class="calculator-container">
+    <h2>PEI Transfection Reagent Calculator</h2>
+    <form id="pei-form">
+        <div class="form-group">
+            <label for="num-reactions">Number of Reactions:</label>
+            <input type="number" id="num-reactions" min="1" value="1" required>
+        </div>
+        <div class="form-group">
+            <label for="packaging-conc">Packaging Plasmid Concentration (µg/µL):</label>
+            <input type="number" id="packaging-conc" step="any" required>
+        </div>
+        <div class="form-group">
+            <label for="transfer-conc">Transfer Plasmid Concentration (µg/µL):</label>
+            <input type="number" id="transfer-conc" step="any" required>
+        </div>
+        <div class="form-group">
+            <label for="well-plate">Type of Well Plate:</label>
+            <select id="well-plate" required>
+                <option value="" disabled selected>Select Plate Type</option>
+                <option value="6">6-well plate</option>
+                <option value="12">12-well plate</option>
+                <option value="24">24-well plate</option>
+                <option value="96">96-well plate</option>
+            </select>
+        </div>
+        <button type="button" onclick="calculatePEI()">Calculate</button>
+    </form>
+    <div id="pei-result"></div>
+</div>
+
+
 <script src="script.js"></script>
 </body>
 </html>
