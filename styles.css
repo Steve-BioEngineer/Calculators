@@ -99,11 +99,8 @@ button:hover {
 }
 
 #pei-result {
-    margin-top: 30px;
+    margin-top: 20px;
     font-size: 18px;
     color: #333333;
-}
-
-#pei-result p {
-    margin-bottom: 10px;
+    text-align: center;
 }
